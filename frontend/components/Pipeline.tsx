@@ -1,6 +1,6 @@
 'use client';
 
-import React, { lazy, Suspense, useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -8,26 +8,18 @@ import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
-
-// const steps = [
-//     'Take Photos',
-//     'Transmit Photos',
-//     'Verify Photos',
-//     'Detect Disease',
-//     'Generate Report',
-// ];
+import StepBasicInformation from '@/components/StepBasicInformation';
+import StepTakePhotos from '@/components/StepTakePhotos';
+import StepReviewData from '@/components/StepReviewData';
+import StepProcessData from '@/components/StepProcessData';
+import StepPrintReport from './StepPrintReport';
 
 const steps = [
-    {
-        label: 'Basic Information',
-        component: lazy(() => import('@/components/StepBasicInformation')),
-    },
-    { label: 'Fundus Photo', component: lazy(() => import('@/components/StepTakePhotos')) },
-    {
-        label: 'Review Data',
-        component: lazy(() => import('@/components/StepReviewData')),
-    },
-    { label: 'Process Data', component: lazy(() => import('@/components/StepProcessData')) },
+    { label: 'Basic Information', component: StepBasicInformation },
+    { label: 'Fundus Photo', component: StepTakePhotos },
+    { label: 'Review Data', component: StepReviewData },
+    { label: 'Process Data', component: StepProcessData },
+    { label: 'Print Report', component: StepPrintReport },
 ];
 
 export default function Pipeline() {
@@ -74,6 +66,16 @@ export default function Pipeline() {
 
     const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
 
+    const [reportGenerated, setReportGenerated] = useState<boolean>(false);
+
+    const [reportData, setReportData] = useState<{
+        diagnose: boolean;
+        confidence: number;
+    }>({
+        diagnose: false,
+        confidence: 0,
+    });
+
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
@@ -84,12 +86,30 @@ export default function Pipeline() {
 
     const handleReset = () => {
         setActiveStep(0);
+        setFormData({
+            cameraType: '',
+            customCameraType: '',
+            age: '',
+            gender: '',
+            diabetesHistory: '',
+            familyDiabetesHistory: '',
+            weight: '',
+            height: '',
+        });
+        setCapturedPhoto(null);
+        setReportGenerated(false);
+        setReportData({
+            diagnose: false,
+            confidence: 0,
+        });
     };
 
     const isOperationalByUser = (step: number) => {
         if (step === 0 && isFormDataValid()) return true;
         if (step === 1 && capturedPhoto) return true;
         if (step === 2) return true;
+        if (step === 3 && reportGenerated) return true;
+        if (step === 4) return true;
         return false;
     };
 
@@ -106,9 +126,6 @@ export default function Pipeline() {
             </Stepper>
             {activeStep === steps.length ? (
                 <React.Fragment>
-                    <Typography sx={{ mt: 2, mb: 1 }}>
-                        All steps completed - you&apos;re finished
-                    </Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                         <Box sx={{ flex: '1 1 auto' }} />
                         <Button onClick={handleReset}>Reset</Button>
@@ -126,6 +143,9 @@ export default function Pipeline() {
                                 }
                                 capturedPhoto={capturedPhoto}
                                 setCapturedPhoto={setCapturedPhoto}
+                                setReportGenerated={setReportGenerated}
+                                setReportData={setReportData}
+                                reportData={reportData}
                             />
                         ) : (
                             <Typography>No Content Available</Typography>
