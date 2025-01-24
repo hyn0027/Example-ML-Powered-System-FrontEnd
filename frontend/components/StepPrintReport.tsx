@@ -6,6 +6,7 @@ interface StepPrintReportProps {
     reportData: {
         diagnose: boolean;
         confidence: number;
+        id: number;
     };
 }
 
@@ -15,6 +16,9 @@ export default function StepPrintReport({ reportData }: StepPrintReportProps) {
             <CardContent>
                 <Typography variant="h4" component="h2" gutterBottom>
                     Diabetes Report
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                    Report ID: {reportData.id}
                 </Typography>
                 <Typography
                     variant="body1"

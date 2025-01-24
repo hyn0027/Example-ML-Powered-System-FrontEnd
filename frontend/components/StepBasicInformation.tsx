@@ -89,7 +89,7 @@ export default function StepBasicInformation({ formData, setFormData }: StepBasi
                 >
                     <MenuItem value="Male">Male</MenuItem>
                     <MenuItem value="Female">Female</MenuItem>
-                    <MenuItem value="Other">Other</MenuItem>
+                    <MenuItem value="Non-binary">Non-binary</MenuItem>
                 </Select>
             </FormControl>
 

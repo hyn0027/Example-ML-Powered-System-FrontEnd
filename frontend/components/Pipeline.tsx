@@ -71,9 +71,11 @@ export default function Pipeline() {
     const [reportData, setReportData] = useState<{
         diagnose: boolean;
         confidence: number;
+        id: number;
     }>({
         diagnose: false,
         confidence: 0,
+        id: 0,
     });
 
     const handleNext = () => {
@@ -101,6 +103,7 @@ export default function Pipeline() {
         setReportData({
             diagnose: false,
             confidence: 0,
+            id: 0,
         });
     };
 

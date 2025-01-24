@@ -19,7 +19,7 @@ interface StepProcessDataProps {
     };
     capturedPhoto: string | null;
     setReportGenerated: (reportGenerated: boolean) => void;
-    setReportData: (reportData: { diagnose: boolean; confidence: number }) => void;
+    setReportData: (reportData: { diagnose: boolean; confidence: number; id: number }) => void;
 }
 
 type StepStatus = 'loading' | 'success' | 'error' | 'suspend';
@@ -116,6 +116,7 @@ export default function StepProcessData({
                 setReportData({
                     diagnose: data.report.diagnose,
                     confidence: data.report.confidence,
+                    id: data.report.id,
                 });
                 socket.close();
             }
