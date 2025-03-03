@@ -5,32 +5,34 @@ import { Button, Box, Typography, Card } from '@mui/material';
 import Image from 'next/image';
 
 interface StepTakePhotosProps {
-    capturedPhoto: string | null;
-    setCapturedPhoto: (photo: string | null) => void;
+    capturedPhoto: string | null; // Base64 string of the captured photo
+    setCapturedPhoto: (photo: string | null) => void; // Function to update captured photo state
 }
 
+// Function to generate a random image URL from Lorem Picsum
 const getRandomImage = () => {
     const randomId = Math.floor(Math.random() * 1000); // Generate a random image ID
-    return `https://picsum.photos/500/400?random=${randomId}`; // Get a random image from Lorem Picsum
+    return `https://picsum.photos/500/400?random=${randomId}`; // Get a random image
 };
 
 export default function StepTakePhotos({ capturedPhoto, setCapturedPhoto }: StepTakePhotosProps) {
     const capturePhoto = async () => {
-        const imageSrc = getRandomImage();
+        const imageSrc = getRandomImage(); // Generate a random image URL
         try {
-            const response = await fetch(imageSrc);
-            const blob = await response.blob();
+            const response = await fetch(imageSrc); // Fetch the image
+            const blob = await response.blob(); // Convert response to a blob
 
             const reader = new FileReader();
             reader.onloadend = () => {
-                setCapturedPhoto(reader.result as string); // Store Base64 string
+                setCapturedPhoto(reader.result as string); // Convert blob to Base64 and store it
             };
             reader.readAsDataURL(blob);
         } catch (error) {
-            console.error('Error capturing photo:', error);
+            console.error('Error capturing photo:', error); // Log any errors
         }
     };
 
+    // Function to reset the captured photo
     const resetPhoto = () => {
         setCapturedPhoto(null);
     };
@@ -87,12 +89,13 @@ export default function StepTakePhotos({ capturedPhoto, setCapturedPhoto }: Step
                     maxWidth: 650,
                 }}
             >
+                {/* Placeholder when no photo is captured */}
                 {!capturedPhoto ? (
                     <Box>
                         <Box
                             sx={{
                                 width: 500,
-                                height: 375, // Maintain aspect ratio (adjust as needed)
+                                height: 375, // Maintain aspect ratio
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -113,6 +116,7 @@ export default function StepTakePhotos({ capturedPhoto, setCapturedPhoto }: Step
                         </Box>
                     </Box>
                 ) : (
+                    // Display captured photo
                     <Box>
                         <Box
                             sx={{

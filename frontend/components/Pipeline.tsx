@@ -14,17 +14,19 @@ import StepReviewData from '@/components/StepReviewData';
 import StepProcessData from '@/components/StepProcessData';
 import StepPrintReport from './StepPrintReport';
 
+// Define the steps of the pipeline along with their respective components
 const steps = [
-    { label: 'Basic Information', component: StepBasicInformation },
-    { label: 'Fundus Photo', component: StepTakePhotos },
-    { label: 'Review Data', component: StepReviewData },
-    { label: 'Process Data', component: StepProcessData },
-    { label: 'Print Report', component: StepPrintReport },
+    { label: 'Basic Information', component: StepBasicInformation }, // Step to collect patient details
+    { label: 'Fundus Photo', component: StepTakePhotos }, // Step to capture eye images
+    { label: 'Review Data', component: StepReviewData }, // Step to review entered and captured data
+    { label: 'Process Data', component: StepProcessData }, // Step to analyze the collected data
+    { label: 'Print Report', component: StepPrintReport }, // Step to generate and print the final report
 ];
 
 export default function Pipeline() {
     const [activeStep, setActiveStep] = React.useState(0);
 
+    // State to store form data related to patient information
     const [formData, setFormData] = useState<{
         cameraType: string;
         customCameraType: string;
@@ -44,6 +46,8 @@ export default function Pipeline() {
         weight: '',
         height: '',
     });
+
+    // Function to validate form data before proceeding to the next step
     const isFormDataValid = () => {
         if (formData.cameraType === 'Other' && !formData.customCameraType) return false;
 
@@ -65,9 +69,9 @@ export default function Pipeline() {
     };
 
     const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
-
     const [reportGenerated, setReportGenerated] = useState<boolean>(false);
 
+    // State to store report data
     const [reportData, setReportData] = useState<{
         diagnose: boolean;
         confidence: number;
@@ -78,14 +82,17 @@ export default function Pipeline() {
         id: 0,
     });
 
+    // Function to move to the next step
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
+    // Function to go back to the previous step
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
+    // Function to reset the entire process and clear all states
     const handleReset = () => {
         setActiveStep(0);
         setFormData({
@@ -107,6 +114,7 @@ export default function Pipeline() {
         });
     };
 
+    // Function to determine if the current step can be interacted with
     const isOperationalByUser = (step: number) => {
         if (step === 0 && isFormDataValid()) return true;
         if (step === 1 && capturedPhoto) return true;
@@ -120,6 +128,7 @@ export default function Pipeline() {
 
     return (
         <Box sx={{ width: '100%', p: 6 }}>
+            {/* Stepper component to visually indicate progress */}
             <Stepper activeStep={activeStep} sx={{ marginBottom: 4 }}>
                 {steps.map((step) => (
                     <Step key={step.label}>
@@ -136,7 +145,6 @@ export default function Pipeline() {
                 </React.Fragment>
             ) : (
                 <React.Fragment>
-                    {/* <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography> */}
                     <Suspense fallback={<CircularProgress />}>
                         {StepContent ? (
                             <StepContent

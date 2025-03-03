@@ -8,26 +8,26 @@ import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 
 interface StepProcessDataProps {
     formData: {
-        cameraType: string;
-        customCameraType: string;
-        age: string;
-        gender: string;
-        diabetesHistory: string;
-        familyDiabetesHistory: string;
-        weight: string;
-        height: string;
+        cameraType: string; // Type of camera used
+        customCameraType: string; // Custom camera type if applicable
+        age: string; // User's age
+        gender: string; // User's gender
+        diabetesHistory: string; // User's personal history of diabetes
+        familyDiabetesHistory: string; // Family history of diabetes
+        weight: string; // User's weight
+        height: string; // User's height
     };
-    capturedPhoto: string | null;
-    setReportGenerated: (reportGenerated: boolean) => void;
-    setReportData: (reportData: { diagnose: boolean; confidence: number; id: number }) => void;
+    capturedPhoto: string | null; // Captured photo data
+    setReportGenerated: (reportGenerated: boolean) => void; // Function to update report generation status
+    setReportData: (reportData: { diagnose: boolean; confidence: number; id: number }) => void; // Function to update the report data
 }
 
 type StepStatus = 'loading' | 'success' | 'error' | 'suspend';
 
 interface Step {
-    id: string;
-    label: string;
-    status: StepStatus;
+    id: string; // Unique identifier for each step
+    label: string; // Step description
+    status: StepStatus; // Current status of the step
 }
 
 export default function StepProcessData({
@@ -43,14 +43,15 @@ export default function StepProcessData({
         { id: 'report', label: 'Generating Report', status: 'loading' },
     ]);
 
-    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null); // Stores error message if any step fails
 
     useEffect(() => {
-        const socket = new WebSocket('ws://localhost:8000/ws/process/');
+        const socket = new WebSocket('ws://localhost:8000/ws/process/'); // Establish WebSocket connection
 
         socket.onopen = () => {
             console.log('WebSocket connection opened');
 
+            // Send form data and captured photo to WebSocket server
             const dataToSend = {
                 formData,
                 capturedPhoto,
@@ -61,7 +62,7 @@ export default function StepProcessData({
         };
 
         socket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
+            const data = JSON.parse(event.data); // Parse incoming WebSocket message
             console.log('Message received:', data);
 
             setSteps((prevSteps) => {
@@ -69,10 +70,11 @@ export default function StepProcessData({
 
                 return prevSteps.map((step) => {
                     if (errorOccurred) {
-                        // Mark subsequent steps as "suspend"
+                        // If an error has occurred, mark subsequent steps as "suspend"
                         return { ...step, status: 'suspend' };
                     }
 
+                    // Check different step conditions and update status accordingly
                     if (step.id === 'basic' && data.message === 'Basic information verified') {
                         return { ...step, status: 'success' };
                     }
@@ -99,10 +101,11 @@ export default function StepProcessData({
                         return { ...step, status: 'success' };
                     }
 
-                    return step;
+                    return step; // Keep previous step status if no changes are required
                 });
             });
 
+            // If there's an error, store the error message and close the socket connection
             if (
                 data.message === 'Invalid basic information' ||
                 data.message === 'Invalid image data'
@@ -111,6 +114,7 @@ export default function StepProcessData({
                 socket.close();
             }
 
+            // If report is successfully generated, update state and close socket
             if (data.message === 'Report generated') {
                 setReportGenerated(true);
                 setReportData({
@@ -123,15 +127,15 @@ export default function StepProcessData({
         };
 
         socket.onclose = () => {
-            console.log('WebSocket connection closed');
+            console.log('WebSocket connection closed'); // Log WebSocket closure
         };
 
         socket.onerror = (error) => {
-            console.error('WebSocket error:', error);
+            console.error('WebSocket error:', error); // Handle WebSocket errors
         };
 
         return () => {
-            socket.close();
+            socket.close(); // Cleanup WebSocket connection on component unmount
         };
     }, [formData, capturedPhoto, setReportGenerated, setReportData]);
 
@@ -148,6 +152,7 @@ export default function StepProcessData({
                         }}
                     >
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            {/* Display appropriate icon based on step status */}
                             {step.status === 'loading' && (
                                 <CircularProgress size={24} sx={{ mr: 2 }} />
                             )}
@@ -168,6 +173,7 @@ export default function StepProcessData({
                             )}
                             <ListItemText primary={step.label} />
                         </Box>
+                        {/* Display error message if any step fails */}
                         {step.status === 'error' && errorMsg && (
                             <Box sx={{ ml: 4, mt: 1 }}>
                                 <ListItemText

@@ -6,16 +6,16 @@ import Image from 'next/image';
 
 interface StepTransmitInformationProps {
     formData: {
-        cameraType: string;
-        customCameraType: string;
-        age: string;
-        gender: string;
-        diabetesHistory: string;
-        familyDiabetesHistory: string;
-        weight: string;
-        height: string;
+        cameraType: string; // Type of camera used for capturing the image
+        customCameraType: string; // Custom camera type if "Other" is selected
+        age: string; // User's age
+        gender: string; // User's gender
+        diabetesHistory: string; // History of diabetes diagnosis
+        familyDiabetesHistory: string; // Family history of diabetes
+        weight: string; // User's weight in kilograms
+        height: string; // User's height in centimeters
     };
-    capturedPhoto: string | null;
+    capturedPhoto: string | null; // Image captured from the camera
 }
 
 export default function StepReviewData({ formData, capturedPhoto }: StepTransmitInformationProps) {
@@ -52,6 +52,7 @@ export default function StepReviewData({ formData, capturedPhoto }: StepTransmit
                     Basic Information
                 </Typography>
                 <Grid2 container spacing={1}>
+                    {/* Camera Type */}
                     <Grid2 size={6}>
                         <Typography variant="subtitle1">Camera Type:</Typography>
                     </Grid2>
@@ -63,6 +64,7 @@ export default function StepReviewData({ formData, capturedPhoto }: StepTransmit
                         </Typography>
                     </Grid2>
 
+                    {/* Age */}
                     <Grid2 size={6}>
                         <Typography variant="subtitle1">Age:</Typography>
                     </Grid2>
@@ -70,6 +72,7 @@ export default function StepReviewData({ formData, capturedPhoto }: StepTransmit
                         <Typography>{formData.age}</Typography>
                     </Grid2>
 
+                    {/* Gender */}
                     <Grid2 size={6}>
                         <Typography variant="subtitle1">Gender:</Typography>
                     </Grid2>
@@ -77,6 +80,7 @@ export default function StepReviewData({ formData, capturedPhoto }: StepTransmit
                         <Typography>{formData.gender}</Typography>
                     </Grid2>
 
+                    {/* Diabetes History */}
                     <Grid2 size={6}>
                         <Typography variant="subtitle1">Diabetes History:</Typography>
                     </Grid2>
@@ -84,6 +88,7 @@ export default function StepReviewData({ formData, capturedPhoto }: StepTransmit
                         <Typography>{formData.diabetesHistory}</Typography>
                     </Grid2>
 
+                    {/* Family Diabetes History */}
                     <Grid2 size={6}>
                         <Typography variant="subtitle1">Family Diabetes History:</Typography>
                     </Grid2>
@@ -91,6 +96,7 @@ export default function StepReviewData({ formData, capturedPhoto }: StepTransmit
                         <Typography>{formData.familyDiabetesHistory}</Typography>
                     </Grid2>
 
+                    {/* Weight */}
                     <Grid2 size={6}>
                         <Typography variant="subtitle1">Weight:</Typography>
                     </Grid2>
@@ -98,6 +104,7 @@ export default function StepReviewData({ formData, capturedPhoto }: StepTransmit
                         <Typography>{formData.weight} kg</Typography>
                     </Grid2>
 
+                    {/* Height */}
                     <Grid2 size={6}>
                         <Typography variant="subtitle1">Height:</Typography>
                     </Grid2>

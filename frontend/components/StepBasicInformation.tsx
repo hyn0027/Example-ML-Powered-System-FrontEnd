@@ -3,28 +3,31 @@
 import React from 'react';
 import { Box, TextField, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 
+// Define the props for the StepBasicInformation component
 interface StepBasicInformationProps {
     formData: {
-        cameraType: string;
-        customCameraType: string;
-        age: string;
-        gender: string;
-        diabetesHistory: string;
-        familyDiabetesHistory: string;
-        weight: string;
-        height: string;
+        cameraType: string; // Type of camera used for capturing images
+        customCameraType: string; // Custom camera type input if "Other" is selected
+        age: string; // Age of the user
+        gender: string; // Gender of the user
+        diabetesHistory: string; // User's history of diabetes diagnosis
+        familyDiabetesHistory: string; // Family history of diabetes
+        weight: string; // Weight of the user in kilograms
+        height: string; // Height of the user in centimeters
     };
-    setFormData: (data: StepBasicInformationProps['formData']) => void;
+    setFormData: (data: StepBasicInformationProps['formData']) => void; // Function to update form data
 }
 
 export default function StepBasicInformation({ formData, setFormData }: StepBasicInformationProps) {
+    // Define the type for change event
     interface ChangeEvent {
         target: {
-            name: string;
-            value: string;
+            name: string; // Name of the form field
+            value: string; // Value entered by the user
         };
     }
 
+    // Handle input change for all fields
     const handleChange = (e: ChangeEvent) => {
         const { name, value } = e.target;
         setFormData({
@@ -50,6 +53,8 @@ export default function StepBasicInformation({ formData, setFormData }: StepBasi
                     <MenuItem value="Other">Other</MenuItem>
                 </Select>
             </FormControl>
+
+            {/* Show custom camera type input if 'Other' is selected */}
             {formData.cameraType === 'Other' && (
                 <TextField
                     label="Custom Camera Type"
