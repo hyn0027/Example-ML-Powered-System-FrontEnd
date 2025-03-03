@@ -25,9 +25,7 @@ const steps = [
 
 export default function Pipeline() {
     const [activeStep, setActiveStep] = useState(0);
-    const [history, setHistory] = useState<{ step: number; timestamp: number; duration: number }[]>(
-        []
-    );
+    const [history, setHistory] = useState<{ step: number; duration: number }[]>([]);
     const [startTime, setStartTime] = useState<number>(Date.now());
     const [retakeCount, setRetakeCount] = useState<number>(0);
 
@@ -92,10 +90,7 @@ export default function Pipeline() {
         const currentTime = Date.now();
         const duration = (currentTime - startTime) / 1000; // Time spent on step in seconds
 
-        setHistory((prevHistory) => [
-            ...prevHistory,
-            { step: activeStep, timestamp: currentTime, duration },
-        ]);
+        setHistory((prevHistory) => [...prevHistory, { step: activeStep, duration }]);
 
         setStartTime(currentTime);
         setActiveStep(newStep);

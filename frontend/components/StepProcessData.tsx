@@ -18,7 +18,7 @@ interface StepProcessDataProps {
         height: string; // User's height
     };
     capturedPhoto: string | null; // Captured photo data
-    stepHistory: { step: number; timestamp: number; duration: number }[]; // History of steps
+    stepHistory: { step: number; duration: number }[]; // History of steps
     retakeCount: number; // Number of retakes
     setReportGenerated: (reportGenerated: boolean) => void; // Function to update report generation status
     setReportData: (reportData: { diagnose: boolean; confidence: number; id: number }) => void; // Function to update the report data
@@ -116,17 +116,18 @@ export default function StepProcessData({
                 data.message === 'Invalid basic information' ||
                 data.message === 'Invalid image data'
             ) {
-                setErrorMsg(data.errorMsg);
+                setErrorMsg(data.data);
                 socket.close();
             }
 
             // If report is successfully generated, update state and close socket
             if (data.message === 'Report generated') {
                 setReportGenerated(true);
+                console.log('Report generated:', data.data);
                 setReportData({
-                    diagnose: data.report.diagnose,
-                    confidence: data.report.confidence,
-                    id: data.report.id,
+                    diagnose: data.data.diagnose,
+                    confidence: data.data.confidence,
+                    id: data.data.id,
                 });
                 socket.close();
             }
