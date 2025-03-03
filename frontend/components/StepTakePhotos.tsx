@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
-import Webcam from 'react-webcam';
+import React from 'react';
 import { Button, Box, Typography, Card } from '@mui/material';
 import Image from 'next/image';
 
@@ -10,13 +9,25 @@ interface StepTakePhotosProps {
     setCapturedPhoto: (photo: string | null) => void;
 }
 
-export default function StepTakePhotos({ capturedPhoto, setCapturedPhoto }: StepTakePhotosProps) {
-    const webcamRef = useRef<Webcam>(null);
+const getRandomImage = () => {
+    const randomId = Math.floor(Math.random() * 1000); // Generate a random image ID
+    return `https://picsum.photos/500/400?random=${randomId}`; // Get a random image from Lorem Picsum
+};
 
-    const capturePhoto = () => {
-        if (webcamRef.current) {
-            const imageSrc = webcamRef.current.getScreenshot();
-            setCapturedPhoto(imageSrc);
+export default function StepTakePhotos({ capturedPhoto, setCapturedPhoto }: StepTakePhotosProps) {
+    const capturePhoto = async () => {
+        const imageSrc = getRandomImage();
+        try {
+            const response = await fetch(imageSrc);
+            const blob = await response.blob();
+
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setCapturedPhoto(reader.result as string); // Store Base64 string
+            };
+            reader.readAsDataURL(blob);
+        } catch (error) {
+            console.error('Error capturing photo:', error);
         }
     };
 
@@ -78,12 +89,23 @@ export default function StepTakePhotos({ capturedPhoto, setCapturedPhoto }: Step
             >
                 {!capturedPhoto ? (
                     <Box>
-                        <Webcam
-                            audio={false}
-                            ref={webcamRef}
-                            screenshotFormat="image/jpeg"
-                            style={{ width: 500, borderRadius: 4 }}
-                        />
+                        <Box
+                            sx={{
+                                width: 500,
+                                height: 375, // Maintain aspect ratio (adjust as needed)
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                bgcolor: 'grey.500',
+                                borderRadius: 2,
+                            }}
+                        >
+                            <Typography variant="body1">
+                                Camera Placeholder
+                                <br />
+                                Click Capture Photo to generate a fake image
+                            </Typography>
+                        </Box>
                         <Box mt={2} sx={{ display: 'flex', justifyContent: 'center' }}>
                             <Button variant="contained" color="primary" onClick={capturePhoto}>
                                 Capture Photo
