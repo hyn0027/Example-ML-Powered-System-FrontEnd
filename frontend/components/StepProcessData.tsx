@@ -18,6 +18,8 @@ interface StepProcessDataProps {
         height: string; // User's height
     };
     capturedPhoto: string | null; // Captured photo data
+    stepHistory: { step: number; timestamp: number; duration: number }[]; // History of steps
+    retakeCount: number; // Number of retakes
     setReportGenerated: (reportGenerated: boolean) => void; // Function to update report generation status
     setReportData: (reportData: { diagnose: boolean; confidence: number; id: number }) => void; // Function to update the report data
 }
@@ -33,6 +35,8 @@ interface Step {
 export default function StepProcessData({
     formData,
     capturedPhoto,
+    stepHistory,
+    retakeCount,
     setReportGenerated,
     setReportData,
 }: StepProcessDataProps) {
@@ -54,6 +58,8 @@ export default function StepProcessData({
             // Send form data and captured photo to WebSocket server
             const dataToSend = {
                 formData,
+                stepHistory,
+                retakeCount,
                 capturedPhoto,
             };
 
@@ -131,13 +137,13 @@ export default function StepProcessData({
         };
 
         socket.onerror = (error) => {
-            console.error('WebSocket error:', error); // Handle WebSocket errors
+            console.log('WebSocket error:', error); // Handle WebSocket errors
         };
 
         return () => {
             socket.close(); // Cleanup WebSocket connection on component unmount
         };
-    }, [formData, capturedPhoto, setReportGenerated, setReportData]);
+    }, [formData, capturedPhoto, stepHistory, retakeCount, setReportGenerated, setReportData]);
 
     return (
         <Box sx={{ p: 2 }}>

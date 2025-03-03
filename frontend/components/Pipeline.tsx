@@ -16,15 +16,20 @@ import StepPrintReport from './StepPrintReport';
 
 // Define the steps of the pipeline along with their respective components
 const steps = [
-    { label: 'Basic Information', component: StepBasicInformation }, // Step to collect patient details
-    { label: 'Fundus Photo', component: StepTakePhotos }, // Step to capture eye images
-    { label: 'Review Data', component: StepReviewData }, // Step to review entered and captured data
-    { label: 'Process Data', component: StepProcessData }, // Step to analyze the collected data
-    { label: 'Print Report', component: StepPrintReport }, // Step to generate and print the final report
+    { label: 'Basic Information', component: StepBasicInformation },
+    { label: 'Fundus Photo', component: StepTakePhotos },
+    { label: 'Review Data', component: StepReviewData },
+    { label: 'Process Data', component: StepProcessData },
+    { label: 'Print Report', component: StepPrintReport },
 ];
 
 export default function Pipeline() {
-    const [activeStep, setActiveStep] = React.useState(0);
+    const [activeStep, setActiveStep] = useState(0);
+    const [history, setHistory] = useState<{ step: number; timestamp: number; duration: number }[]>(
+        []
+    );
+    const [startTime, setStartTime] = useState<number>(Date.now());
+    const [retakeCount, setRetakeCount] = useState<number>(0);
 
     // State to store form data related to patient information
     const [formData, setFormData] = useState<{
@@ -82,18 +87,34 @@ export default function Pipeline() {
         id: 0,
     });
 
+    // Function to track step history and duration
+    const recordStepVisit = (newStep: number) => {
+        const currentTime = Date.now();
+        const duration = (currentTime - startTime) / 1000; // Time spent on step in seconds
+
+        setHistory((prevHistory) => [
+            ...prevHistory,
+            { step: activeStep, timestamp: currentTime, duration },
+        ]);
+
+        setStartTime(currentTime);
+        setActiveStep(newStep);
+    };
+
     // Function to move to the next step
     const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        recordStepVisit(activeStep + 1);
     };
 
     // Function to go back to the previous step
     const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+        recordStepVisit(activeStep - 1);
     };
 
     // Function to reset the entire process and clear all states
     const handleReset = () => {
+        setHistory([]);
+        setStartTime(Date.now());
         setActiveStep(0);
         setFormData({
             cameraType: '',
@@ -157,6 +178,9 @@ export default function Pipeline() {
                                 setReportGenerated={setReportGenerated}
                                 setReportData={setReportData}
                                 reportData={reportData}
+                                stepHistory={history} // Passing history data to components
+                                retakeCount={retakeCount}
+                                setRetakeCount={setRetakeCount}
                             />
                         ) : (
                             <Typography>No Content Available</Typography>

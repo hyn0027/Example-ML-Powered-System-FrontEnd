@@ -5,8 +5,10 @@ import { Button, Box, Typography, Card } from '@mui/material';
 import Image from 'next/image';
 
 interface StepTakePhotosProps {
-    capturedPhoto: string | null; // Base64 string of the captured photo
-    setCapturedPhoto: (photo: string | null) => void; // Function to update captured photo state
+    capturedPhoto: string | null;
+    setCapturedPhoto: (photo: string | null) => void;
+    retakeCount: number; // Track the number of retakes
+    setRetakeCount: (count: number) => void; // Update retake count
 }
 
 // Function to generate a random image URL from Lorem Picsum
@@ -15,7 +17,12 @@ const getRandomImage = () => {
     return `https://picsum.photos/500/400?random=${randomId}`; // Get a random image
 };
 
-export default function StepTakePhotos({ capturedPhoto, setCapturedPhoto }: StepTakePhotosProps) {
+export default function StepTakePhotos({
+    capturedPhoto,
+    setCapturedPhoto,
+    retakeCount,
+    setRetakeCount,
+}: StepTakePhotosProps) {
     const capturePhoto = async () => {
         const imageSrc = getRandomImage(); // Generate a random image URL
         try {
@@ -32,9 +39,10 @@ export default function StepTakePhotos({ capturedPhoto, setCapturedPhoto }: Step
         }
     };
 
-    // Function to reset the captured photo
+    // Function to reset the captured photo and increment retake count
     const resetPhoto = () => {
         setCapturedPhoto(null);
+        setRetakeCount(retakeCount + 1);
     };
 
     return (
