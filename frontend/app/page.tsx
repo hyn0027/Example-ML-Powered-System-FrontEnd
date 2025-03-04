@@ -15,8 +15,8 @@ export default function Home() {
                     alignItems: 'center',
                 }}
             >
-                <Typography variant="h4" component="h1" >
-                    Example ML-Powered System
+                <Typography variant="h4" component="h1">
+                    mtmDR Diagnosing System
                 </Typography>
                 <Test />
             </Box>
