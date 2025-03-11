@@ -16,7 +16,7 @@ export default function StepPrintReport({ reportData }: StepPrintReportProps) {
             <CardContent>
                 {/* Title for the report */}
                 <Typography variant="h4" component="h2" gutterBottom>
-                    Diabetes Report
+                    Diagnose Report
                 </Typography>
 
                 {/* Displaying the unique report ID */}
@@ -30,7 +30,7 @@ export default function StepPrintReport({ reportData }: StepPrintReportProps) {
                     color={reportData.diagnose ? 'error' : 'success'}
                     gutterBottom
                 >
-                    {reportData.diagnose ? 'Diabetes Detected' : 'No Diabetes Detected'}
+                    {reportData.diagnose ? 'mtmDR Detected' : 'No mtmDR Detected'}
                 </Typography>
 
                 {/* Displaying the confidence level of the diagnosis in percentage format */}

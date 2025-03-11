@@ -13,8 +13,9 @@ interface StepTakePhotosProps {
 
 // Function to generate a random image URL from Lorem Picsum
 const getRandomImage = () => {
-    const randomId = Math.floor(Math.random() * 1000); // Generate a random image ID
-    return `https://picsum.photos/500/400?random=${randomId}`; // Get a random image
+    const totalImages = 100; // Total number of PNG images available, e.g., image1.png to image10.png
+    const randomId = Math.floor(Math.random() * totalImages) + 1; // Random number between 1 and totalImages
+    return `/fundus_image/${randomId}.png`; // Local image path
 };
 
 export default function StepTakePhotos({
@@ -24,9 +25,9 @@ export default function StepTakePhotos({
     setRetakeCount,
 }: StepTakePhotosProps) {
     const capturePhoto = async () => {
-        const imageSrc = getRandomImage(); // Generate a random image URL
+        const imageSrc = getRandomImage(); // Generate a random local image URL
         try {
-            const response = await fetch(imageSrc); // Fetch the image
+            const response = await fetch(imageSrc); // Fetch the local image
             const blob = await response.blob(); // Convert response to a blob
 
             const reader = new FileReader();
