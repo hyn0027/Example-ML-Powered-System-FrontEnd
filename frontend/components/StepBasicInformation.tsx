@@ -1,7 +1,16 @@
 'use client';
 
 import React from 'react';
-import { Box, TextField, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import {
+    Box,
+    TextField,
+    MenuItem,
+    Select,
+    InputLabel,
+    FormControl,
+    Typography,
+    Divider,
+} from '@mui/material';
 
 // Define the props for the StepBasicInformation component
 interface StepBasicInformationProps {
@@ -37,9 +46,23 @@ export default function StepBasicInformation({ formData, setFormData }: StepBasi
     };
 
     return (
-        <Box sx={{ padding: 3, maxWidth: 600, margin: 'auto' }}>
+        <Box
+            sx={{
+                padding: 3,
+                maxWidth: 600,
+                margin: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+            }}
+        >
+            {/* Section: Camera Information */}
+            <Typography variant="h6" gutterBottom>
+                Camera Information
+            </Typography>
+
             {/* Camera Type Dropdown */}
-            <FormControl fullWidth margin="normal">
+            <FormControl fullWidth>
                 <InputLabel id="camera-type-label">Camera Type</InputLabel>
                 <Select
                     labelId="camera-type-label"
@@ -54,37 +77,40 @@ export default function StepBasicInformation({ formData, setFormData }: StepBasi
                 </Select>
             </FormControl>
 
-            {/* Show custom camera type input if 'Other' is selected */}
+            {/* Custom Camera Type if 'Other' is selected */}
             {formData.cameraType === 'Other' && (
                 <TextField
                     label="Custom Camera Type"
                     name="customCameraType"
                     value={formData.customCameraType}
-                    onChange={handleChange}
+                    onChange={(e) => handleChange(e)}
                     fullWidth
-                    margin="normal"
                 />
             )}
 
-            {/* Age Input */}
+            <Divider sx={{ marginY: 3 }} />
+
+            {/* Section: User Information */}
+            <Typography variant="h6" gutterBottom>
+                Patient Information
+            </Typography>
+
+            {/* Age */}
             <TextField
                 label="Age"
                 name="age"
                 type="number"
                 value={formData.age}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e)}
                 onInput={(e) => {
                     const input = e.target as HTMLInputElement;
-                    if (parseFloat(input.value) < 0) {
-                        input.value = '';
-                    }
+                    if (parseFloat(input.value) < 0) input.value = '';
                 }}
                 fullWidth
-                margin="normal"
             />
 
-            {/* Gender Dropdown */}
-            <FormControl fullWidth margin="normal">
+            {/* Gender */}
+            <FormControl fullWidth>
                 <InputLabel id="gender-label">Biological Gender</InputLabel>
                 <Select
                     labelId="gender-label"
@@ -98,8 +124,8 @@ export default function StepBasicInformation({ formData, setFormData }: StepBasi
                 </Select>
             </FormControl>
 
-            {/* Diabetes Diagnosis History Dropdown */}
-            <FormControl fullWidth margin="normal">
+            {/* Diabetes History */}
+            <FormControl fullWidth>
                 <InputLabel id="diabetes-history-label">Diabetes Diagnosis History</InputLabel>
                 <Select
                     labelId="diabetes-history-label"
@@ -113,8 +139,8 @@ export default function StepBasicInformation({ formData, setFormData }: StepBasi
                 </Select>
             </FormControl>
 
-            {/* Family Diabetes History Dropdown */}
-            <FormControl fullWidth margin="normal">
+            {/* Family Diabetes History */}
+            <FormControl fullWidth>
                 <InputLabel id="family-diabetes-history-label">Family Diabetes History</InputLabel>
                 <Select
                     labelId="family-diabetes-history-label"
@@ -128,38 +154,32 @@ export default function StepBasicInformation({ formData, setFormData }: StepBasi
                 </Select>
             </FormControl>
 
-            {/* Weight Input */}
+            {/* Weight */}
             <TextField
                 label="Weight (kg)"
                 name="weight"
                 type="number"
                 value={formData.weight}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e)}
                 onInput={(e) => {
                     const input = e.target as HTMLInputElement;
-                    if (parseFloat(input.value) < 0) {
-                        input.value = '';
-                    }
+                    if (parseFloat(input.value) < 0) input.value = '';
                 }}
                 fullWidth
-                margin="normal"
             />
 
-            {/* Height Input */}
+            {/* Height */}
             <TextField
                 label="Height (cm)"
                 name="height"
                 type="number"
                 value={formData.height}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e)}
                 onInput={(e) => {
                     const input = e.target as HTMLInputElement;
-                    if (parseFloat(input.value) < 0) {
-                        input.value = '';
-                    }
+                    if (parseFloat(input.value) < 0) input.value = '';
                 }}
                 fullWidth
-                margin="normal"
             />
         </Box>
     );

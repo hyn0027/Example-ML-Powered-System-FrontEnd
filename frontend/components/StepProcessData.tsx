@@ -50,7 +50,7 @@ export default function StepProcessData({
     const [errorMsg, setErrorMsg] = useState<string | null>(null); // Stores error message if any step fails
 
     useEffect(() => {
-        const socket = new WebSocket('ws://localhost:8000/ws/process/'); // Establish WebSocket connection
+        const socket = new WebSocket('ws://172.26.73.228:8000/ws/process/'); // Establish WebSocket connection
 
         socket.onopen = () => {
             console.log('WebSocket connection opened');
@@ -73,41 +73,67 @@ export default function StepProcessData({
 
             setSteps((prevSteps) => {
                 let errorOccurred = false;
+                let finishOccurred = false;
 
                 return prevSteps.map((step) => {
                     if (errorOccurred) {
-                        // If an error has occurred, mark subsequent steps as "suspend"
+                        // After an error, all remaining steps are suspended
                         return { ...step, status: 'suspend' };
                     }
 
-                    // Check different step conditions and update status accordingly
-                    if (step.id === 'basic' && data.message === 'Basic information verified') {
-                        return { ...step, status: 'success' };
+                    // If step already succeeded or failed, keep its status
+                    if (step.status === 'success' || step.status === 'error') {
+                        return step;
                     }
 
-                    if (step.id === 'basic' && data.message === 'Invalid basic information') {
-                        errorOccurred = true;
-                        return { ...step, status: 'error' };
+                    // Determine if this is the step being reported on
+                    let updatedStatus: StepStatus = 'suspend';
+                    console.log('Step:', step.id);
+                    console.log('Data:', data.message);
+                    console.log('Finish:', finishOccurred);
+
+                    // Check which step corresponds to incoming message and update status
+                    if (step.id === 'basic') {
+                        if (data.message === 'Basic information verified') {
+                            updatedStatus = 'success';
+                            finishOccurred = true;
+                        } else if (data.message === 'Invalid basic information') {
+                            updatedStatus = 'error';
+                            errorOccurred = true;
+                        } else {
+                            updatedStatus = 'loading'; // still processing
+                        }
+                    } else if (step.id === 'photo') {
+                        if (data.message === 'Image data verified') {
+                            updatedStatus = 'success';
+                            finishOccurred = true;
+                        } else if (data.message === 'Invalid image data') {
+                            updatedStatus = 'error';
+                            errorOccurred = true;
+                        } else if (finishOccurred) {
+                            updatedStatus = 'loading'; // allowed to process now
+                            finishOccurred = false;
+                        }
+                    } else if (step.id === 'diagnose') {
+                        if (data.message === 'Diagnosis complete') {
+                            updatedStatus = 'success';
+                            finishOccurred = true;
+                        } else if (finishOccurred) {
+                            updatedStatus = 'loading'; // allowed to process now
+                            finishOccurred = false;
+                        }
+                    } else if (step.id === 'report') {
+                        if (data.message === 'Report generated') {
+                            updatedStatus = 'success';
+                            finishOccurred = true;
+                        } else if (finishOccurred) {
+                            updatedStatus = 'loading'; // allowed to process now
+                            finishOccurred = false;
+                        }
                     }
 
-                    if (step.id === 'photo' && data.message === 'Image data verified') {
-                        return { ...step, status: 'success' };
-                    }
-
-                    if (step.id === 'photo' && data.message === 'Invalid image data') {
-                        errorOccurred = true;
-                        return { ...step, status: 'error' };
-                    }
-
-                    if (step.id === 'diagnose' && data.message === 'Diagnosis complete') {
-                        return { ...step, status: 'success' };
-                    }
-
-                    if (step.id === 'report' && data.message === 'Report generated') {
-                        return { ...step, status: 'success' };
-                    }
-
-                    return step; // Keep previous step status if no changes are required
+                    // Apply status change if determined, otherwise suspend
+                    return { ...step, status: updatedStatus };
                 });
             });
 
