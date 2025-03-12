@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Box, Typography, Grid2, Card } from '@mui/material';
+import { Box, Typography, Grid2, Card, Divider } from '@mui/material';
 import Image from 'next/image';
 
 interface StepTransmitInformationProps {
@@ -49,9 +49,9 @@ export default function StepReviewData({ formData, capturedPhoto }: StepTransmit
                 }}
             >
                 <Typography variant="h6" gutterBottom>
-                    Basic Information
+                    Camera Information
                 </Typography>
-                <Grid2 container spacing={1}>
+                <Grid2 container spacing={1} sx={{ width: '100%' }}>
                     {/* Camera Type */}
                     <Grid2 size={6}>
                         <Typography variant="subtitle1">Camera Type:</Typography>
@@ -63,7 +63,14 @@ export default function StepReviewData({ formData, capturedPhoto }: StepTransmit
                                 : formData.cameraType}
                         </Typography>
                     </Grid2>
+                </Grid2>
 
+                <Divider sx={{ my: 2 }} />
+
+                <Typography variant="h6" gutterBottom>
+                    Patient Information
+                </Typography>
+                <Grid2 container spacing={1} sx={{ width: '100%' }}>
                     {/* Age */}
                     <Grid2 size={6}>
                         <Typography variant="subtitle1">Age:</Typography>
