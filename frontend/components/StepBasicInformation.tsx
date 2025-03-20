@@ -156,7 +156,7 @@ export default function StepBasicInformation({ formData, setFormData }: StepBasi
 
             {/* Weight */}
             <TextField
-                label="Weight (kg)"
+                label="Weight (lb)"
                 name="weight"
                 type="number"
                 value={formData.weight}
@@ -168,9 +168,22 @@ export default function StepBasicInformation({ formData, setFormData }: StepBasi
                 fullWidth
             />
 
-            {/* Height */}
-            <TextField
+            {/* Height (cm)*/}
+            {/* <TextField
                 label="Height (cm)"
+                name="height"
+                type="number"
+                value={formData.height}
+                onChange={(e) => handleChange(e)}
+                onInput={(e) => {
+                    const input = e.target as HTMLInputElement;
+                    if (parseFloat(input.value) < 0) input.value = '';
+                }}
+                fullWidth
+            /> */}
+            {/* Height (inch and feet)*/}
+            <TextField
+                label="Height (ft)"
                 name="height"
                 type="number"
                 value={formData.height}

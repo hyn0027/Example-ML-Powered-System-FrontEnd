@@ -108,7 +108,7 @@ export default function StepReviewData({ formData, capturedPhoto }: StepTransmit
                         <Typography variant="subtitle1">Weight:</Typography>
                     </Grid2>
                     <Grid2 size={6}>
-                        <Typography>{formData.weight} kg</Typography>
+                        <Typography>{formData.weight} ft</Typography>
                     </Grid2>
 
                     {/* Height */}
@@ -116,7 +116,7 @@ export default function StepReviewData({ formData, capturedPhoto }: StepTransmit
                         <Typography variant="subtitle1">Height:</Typography>
                     </Grid2>
                     <Grid2 size={6}>
-                        <Typography>{formData.height} cm</Typography>
+                        <Typography>{formData.height} lb</Typography>
                     </Grid2>
                 </Grid2>
             </Card>

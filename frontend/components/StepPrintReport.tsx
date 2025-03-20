@@ -82,8 +82,8 @@ export default function StepPrintReport({
                         <Typography variant="body2">
                             Family History: {formData.familyDiabetesHistory}
                         </Typography>
-                        <Typography variant="body2">Weight: {formData.weight} kg</Typography>
-                        <Typography variant="body2">Height: {formData.height} cm</Typography>
+                        <Typography variant="body2">Weight: {formData.weight} lb</Typography>
+                        <Typography variant="body2">Height: {formData.height} ft</Typography>
                     </Grid>
                 </Grid>
 
