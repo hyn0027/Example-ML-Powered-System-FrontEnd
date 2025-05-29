@@ -133,3 +133,5 @@ dist
 .vscode
 
 *.png
+
+ngrok-config.yml
