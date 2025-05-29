@@ -50,7 +50,7 @@ export default function StepProcessData({
     const [errorMsg, setErrorMsg] = useState<string | null>(null); // Stores error message if any step fails
 
     useEffect(() => {
-        const socket = new WebSocket('wss://localhost:8000/ws/process/'); // Establish WebSocket connection
+        const socket = new WebSocket('ws://0.0.0.0:8000/ws/process/'); // Establish WebSocket connection
 
         socket.onopen = () => {
             console.log('WebSocket connection opened');
